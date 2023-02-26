@@ -69,6 +69,9 @@ RUN apk add  xf86-video-amdgpu linux-firmware-amdgpu --no-cache --update-cache \
 from scratch
 ARG OUTPUT
 
+# copy local files
+COPY root/ /
+
 # Copy lib files
 COPY --from=amd $OUTPUT/usr/lib/dri/*.so* /usr/lib/plexmediaserver/lib/dri/
 COPY --from=amd $OUTPUT/usr/lib/ld-musl-x86_64.so* /usr/lib/plexmediaserver/lib/
@@ -83,3 +86,4 @@ COPY --from=amd $OUTPUT/usr/lib/libva*.so* /usr/lib/plexmediaserver/lib/
 COPY --from=amd $OUTPUT/usr/lib/libxml2*.so* /usr/lib/plexmediaserver/lib/
 COPY --from=amd $OUTPUT/usr/lib/libz*.so.* /usr/lib/plexmediaserver/lib/
 COPY --from=amd $OUTPUT/usr/lib/libzstd*.so* /usr/lib/plexmediaserver/lib/
+
