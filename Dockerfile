@@ -66,24 +66,34 @@ RUN apk add  xf86-video-amdgpu linux-firmware-amdgpu --no-cache --update-cache \
  && cp -a /lib/libz*.so* "$OUTPUT/usr/lib"
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-from scratch
+FROM ghcr.io/linuxserver/baseimage-alpine:3.15 as buildstage
 ARG OUTPUT
 
-# copy local files
-COPY root/ /
+LABEL maintainer="username"
+
+## copy local files
+COPY root/ /root-layer/
 
 # Copy lib files
-COPY --from=amd $OUTPUT/usr/lib/dri/*.so* /usr/lib/plexmediaserver/lib/dri/
-COPY --from=amd $OUTPUT/usr/lib/ld-musl-x86_64.so* /usr/lib/plexmediaserver/lib/
-COPY --from=amd $OUTPUT/usr/lib/libdrm*.so* /usr/lib/plexmediaserver/lib/
-COPY --from=amd $OUTPUT/usr/lib/libelf*.so* /usr/lib/plexmediaserver/lib/
-COPY --from=amd $OUTPUT/usr/lib/libffi*.so* /usr/lib/plexmediaserver/lib/
-COPY --from=amd $OUTPUT/usr/lib/libgcc_s*.so* /usr/lib/plexmediaserver/lib/
-# COPY --from=amd $OUTPUT/usr/lib/libkms*.so* /usr/lib/plexmediaserver/lib/
-COPY --from=amd $OUTPUT/usr/lib/libLLVM*.so* /usr/lib/plexmediaserver/lib/
-COPY --from=amd $OUTPUT/usr/lib/libstdc++*.so* /usr/lib/plexmediaserver/lib/
-COPY --from=amd $OUTPUT/usr/lib/libva*.so* /usr/lib/plexmediaserver/lib/
-COPY --from=amd $OUTPUT/usr/lib/libxml2*.so* /usr/lib/plexmediaserver/lib/
-COPY --from=amd $OUTPUT/usr/lib/libz*.so.* /usr/lib/plexmediaserver/lib/
-COPY --from=amd $OUTPUT/usr/lib/libzstd*.so* /usr/lib/plexmediaserver/lib/
+COPY --from=amd $OUTPUT/usr/lib/dri/*.so* /root-layer/usr/lib/plexmediaserver/lib/dri/
+COPY --from=amd $OUTPUT/usr/lib/ld-musl-x86_64.so* /root-layer/usr/lib/plexmediaserver/lib/
+COPY --from=amd $OUTPUT/usr/lib/libdrm*.so* /root-layer/usr/lib/plexmediaserver/lib/
+COPY --from=amd $OUTPUT/usr/lib/libelf*.so* /root-layer/usr/lib/plexmediaserver/lib/
+COPY --from=amd $OUTPUT/usr/lib/libffi*.so* /root-layer/usr/lib/plexmediaserver/lib/
+COPY --from=amd $OUTPUT/usr/lib/libgcc_s*.so* /root-layer/usr/lib/plexmediaserver/lib/
+# COPY --from=amd $OUTPUT/usr/lib/libkms*.so* /root-layer/usr/lib/plexmediaserver/lib/
+COPY --from=amd $OUTPUT/usr/lib/libLLVM*.so* /root-layer/usr/lib/plexmediaserver/lib/
+COPY --from=amd $OUTPUT/usr/lib/libstdc++*.so* /root-layer/usr/lib/plexmediaserver/lib/
+COPY --from=amd $OUTPUT/usr/lib/libva*.so* /root-layer/usr/lib/plexmediaserver/lib/
+COPY --from=amd $OUTPUT/usr/lib/libxml2*.so* /root-layer/usr/lib/plexmediaserver/lib/
+COPY --from=amd $OUTPUT/usr/lib/libz*.so.* /root-layer/usr/lib/plexmediaserver/lib/
+COPY --from=amd $OUTPUT/usr/lib/libzstd*.so* /root-layer/usr/lib/plexmediaserver/lib/
 
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Single layer deployed image
+FROM scratch
+
+LABEL maintainer="skjnldsv"
+
+# Add files from buildstage
+COPY --from=buildstage /root-layer/ /
