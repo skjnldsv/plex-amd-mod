@@ -1,0 +1,10 @@
+#!/usr/bin/with-contenv bash
+
+apt-get update
+apt-get install -y software-properties-common
+
+echo "**** Adding oibaf/graphics-drivers repo ****"
+add-apt-repository ppa:oibaf/graphics-drivers -y
+
+echo "**** Adding radeon/rocm repo ****"
+add-apt-repository "deb https://repo.radeon.com/rocm/apt/latest $(lsb_release -s -c) main" -y

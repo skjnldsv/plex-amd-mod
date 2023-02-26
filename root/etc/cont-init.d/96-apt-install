@@ -6,5 +6,6 @@ apt-get install -y \
 	mesa-va-drivers \
 	mesa-vdpau-drivers \
 	libdrm-amdgpu1 \
-	libavutil56
+	libavutil56 \
+	rocm-opencl-runtime
 apt-get clean
