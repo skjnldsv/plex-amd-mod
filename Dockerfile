@@ -66,10 +66,9 @@ RUN apk add  xf86-video-amdgpu linux-firmware-amdgpu --no-cache --update-cache \
  && cp -a /lib/libz*.so* "$OUTPUT/usr/lib"
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Agregate files
 FROM ghcr.io/linuxserver/baseimage-alpine:3.15 as buildstage
 ARG OUTPUT
-
-LABEL maintainer="username"
 
 ## copy local files
 COPY root/ /root-layer/
