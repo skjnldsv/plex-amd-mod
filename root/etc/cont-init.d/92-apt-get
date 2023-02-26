@@ -1,0 +1,4 @@
+#!/usr/bin/with-contenv bash
+
+echo "**** Update package lists ****"
+apt-get update
